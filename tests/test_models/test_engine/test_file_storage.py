@@ -100,3 +100,4 @@ class TestFileStorage(unittest.TestCase):
         a_storage.reload()
         objs = a_storage.all()
         for key in dicts:
+            self.assertEqual(objs[key].to_dict(), dicts[key])
