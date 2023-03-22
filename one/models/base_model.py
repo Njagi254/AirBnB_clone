@@ -1,82 +1,54 @@
 #!/usr/bin/python3
-'''
-Defines the class BaseModel
-'''
+"""This script is the base model"""
 import uuid
-import models
-from datetime import datetime
+import datetime
+from models import storage
 
 
-class BaseModel:
-    '''Defines all common attributes/methods for other classes
-
-    Attributes:
-        id (string): unique user id
-        created_at (datetime): time object was created
-        updated__at (datetime): time object was  changed
-    '''
+class BaseModel():
+    ''''Class from which all other classes will inherit'''
 
     def __init__(self, *args, **kwargs):
-        '''Initializes an object
+        '''Initializes instance attributes'''
 
-        '''
-        time_format = '%Y-%m-%dT%H:%M:%S.%f'
-        if kwargs:
-            for k, v in kwargs.items():
-                if k == "__class__":
-                    pass
-                else:
-                    setattr(self, k, v)
-            if 'id' in kwargs.keys():
-                self.id = kwargs['id']
-            if 'created_at' in kwargs.keys():
-                self.created_at = datetime.strptime(kwargs['created_at'],
-                                                    time_format)
-            if 'updated_at' in kwargs.keys():
-                self.updated_at = datetime.strptime(kwargs['updated_at'],
-                                                    time_format)
-
-        else:
+        if len(kwargs) == 0:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = self.created_at
-            models.storage.new(self)
+            self.created_at = datetime.datetime.now()
+            self.updated_at = datetime.datetime.now()
+            storage.new(self)
+        else:
+            for key in kwargs.keys():
+                # check and escape the __class__ key
+                if key == "__class__":
+                    continue
+                else:
+                    # check and change the format for updated_at & created_at
+                    if key == "updated_at" or key == "created_at":
+                        kwargs[key] = datetime.datetime.strptime(
+                            kwargs[key], "%Y-%m-%dT%H:%M:%S.%f")
+                    # set the attributes of the instance
+                    setattr(self, key, kwargs[key])
+                # self.key = kwargs[key]
+                # print(f"{key}: {kwargs[key]}")
 
     def __str__(self):
-        '''Prints a string version of any object
-
-        Return:
-            returns the string version
-        '''
-        return '[{}] ({}) {}'.format(self.__class__.__name__,
-                                     self.id, self.__dict__)
+        '''Returns official string representation'''
+        return (f"[{self.__class__.__name__}] ({self.id}) \
+{str(self.__dict__)}")
 
     def save(self):
-        '''Updates updated_at with the current datetime
-
-        '''
-        self.updated_at = datetime.now()
-        models.storage.save()
+        '''updates the public instance attribute updated_at'''
+        storage.save()
+        self.updated_at = datetime.datetime.now()
 
     def to_dict(self):
-        '''Returns a dictionary of all keys/values of __dict__
-
-        Return:
-            returns a dictionary
-        '''
-        self_dict = self.__dict__.copy()
-        self_dict['__class__'] = self.__class__.__name__
-        self_dict['created_at'] = self.created_at.isoformat()
-        self_dict['updated_at'] = self.updated_at.isoformat()
-        return self_dict
-
-    @classmethod
-    def count(self):
-        '''Returns a count of instance objects'''
-        objects = models.storage.all()
-        count = 0
-
-        for obj in objects:
-            if obj.__class__.__name__ == self.__class__.__name__:
-                count += 1
-        return count
+        '''returns a dictionary containing all keys/values of __dict__'''
+        object_dict = {}
+        for key in self.__dict__.keys():
+            if key not in ('created_at', 'updated_at'):
+                object_dict[key] = self.__dict__[key]
+            else:
+                object_dict[key] = datetime.datetime.isoformat(
+                    self.__dict__[key])
+        object_dict['__class__'] = self.__class__.__name__
+        return (object_dict)
