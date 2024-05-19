@@ -7,6 +7,7 @@ import uuid
 from datetime import datetime
 import models
 
+
 class BaseModel:
     """
     BaseModel class that defines all common attributes/methods
@@ -28,7 +29,6 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
-
 
     def __str__(self):
         """

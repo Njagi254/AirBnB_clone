@@ -36,11 +36,11 @@ class FileStorage:
         Serializes __objects to the JSON file (path: __file_path)
         """
         obj_dict = {
-                key: obj.to_dict() for key, obj in FileStorage.__objects.items()
+                key: obj.to_dict(
+                ) for key, obj in FileStorage.__objects.items()
                 }
         with open(FileStorage.__file_path, "w") as f:
             json.dump(obj_dict, f)
-
 
     def reload(self):
         """
@@ -53,4 +53,3 @@ class FileStorage:
                 cls_name = value["__class__"]
                 if cls_name == "BaseModel":
                     FileStorage.__objects[key] = BaseModel(**value)
-
