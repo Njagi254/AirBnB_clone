@@ -13,7 +13,6 @@ class BaseModel:
     """Class from which all other classes will inherit"""
 
     def __init__(self, *args, **kwargs):
-
         """Initializes instance attributes
 
         Args:
@@ -41,7 +40,6 @@ class BaseModel:
             storage.new(self)
 
     def __str__(self):
-
         """Returns official string representation"""
 
         return "[{}] ({}) {}".\
