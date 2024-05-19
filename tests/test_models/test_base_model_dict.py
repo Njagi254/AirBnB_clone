@@ -33,8 +33,12 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(model_dict['__class__'], 'BaseModel')
         self.assertEqual(model_dict['name'], 'My_First_Model')
         self.assertEqual(model_dict['my_number'], 89)
-        self.assertEqual(model_dict['created_at'], self.model.created_at.isoformat())
-        self.assertEqual(model_dict['updated_at'], self.model.updated_at.isoformat())
+        self.assertEqual(
+            model_dict['created_at'], self.model.created_at.isoformat()
+            )
+        self.assertEqual(
+            model_dict['updated_at'], self.model.updated_at.isoformat()
+            )
 
         new_model = BaseModel(**model_dict)
         self.assertEqual(new_model.id, self.model.id)
@@ -56,4 +60,3 @@ class TestBaseModel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
