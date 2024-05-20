@@ -10,6 +10,7 @@ from models.user import User
 import os
 import json
 
+
 class TestFileStorage(unittest.TestCase):
     """
     Test cases for the FileStorage class
@@ -76,15 +77,16 @@ class TestFileStorage(unittest.TestCase):
         user.email = "test@example.com"
         self.storage.new(user)
         self.storage.save()
-        
+
         # Ensure the file is created
         self.assertTrue(os.path.exists(self.file_path))
-        
+
         # Reload storage and check if user instance is restored
         self.storage.reload()
         key = f"User.{user.id}"
         self.assertIn(key, self.storage.all())
         self.assertEqual(self.storage.all()[key].email, "test@example.com")
+
 
 if __name__ == '__main__':
     unittest.main()
