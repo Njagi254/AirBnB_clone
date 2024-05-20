@@ -104,8 +104,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """
-        Prints all string representations of all instances based or
-        not on the class name
+        Prints all string representations of all instances based or not
+        on the class name
         """
         if arg and arg not in self.classes:
             print("** class doesn't exist **")
@@ -152,6 +152,21 @@ class HBNBCommand(cmd.Cmd):
         else:
             setattr(obj, attr_name, attr_value)
         obj.save()
+
+    def default(self, line):
+        """
+        Handle unrecognized commands, such as <class name>.all()
+        """
+        args = line.split('.')
+        if len(args) > 1:
+            class_name = args[0]
+            command = args[1]
+            if class_name in self.classes and command == "all()":
+                self.do_all(class_name)
+            else:
+                print("*** Unknown syntax: {}".format(line))
+        else:
+            print("*** Unknown syntax: {}".format(line))
 
 
 if __name__ == '__main__':
