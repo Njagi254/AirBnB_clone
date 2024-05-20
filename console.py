@@ -104,7 +104,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """
-        Prints all string representations of all instances based or not on the class name
+        Prints all string representations of all instances based or not
+        on the class name
         """
         if arg and arg not in self.classes:
             print("** class doesn't exist **")
@@ -117,7 +118,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-        Updates an instance based on the class name and id by adding or updating attribute
+        Updates an instance based on the class name and id by adding or
+        updating attribute
         """
         args = arg.split()
         if len(args) == 0:
@@ -153,7 +155,9 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Handle unrecognized commands, such as <class name>.all(), <class name>.count(), and <class name>.show(<id>)
+        Handle unrecognized commands, like <class name>.all(),
+        <class name>.count(), <class name>.show(<id>), and
+        <class name>.destroy(<id>)
         """
         args = line.split('.')
         if len(args) > 1:
@@ -165,8 +169,11 @@ class HBNBCommand(cmd.Cmd):
                 elif command == "count()":
                     self.count(class_name)
                 elif command.startswith("show(") and command.endswith(")"):
-                    instance_id = command[5:-1]
-                    self.show(class_name, instance_id)
+                    instance_id = command[5:-1].strip('"')
+                    self.do_show(f"{class_name} {instance_id}")
+                elif command.startswith("destroy(") and command.endswith(")"):
+                    instance_id = command[8:-1].strip('"')
+                    self.do_destroy(f"{class_name} {instance_id}")
                 else:
                     print("*** Unknown syntax: {}".format(line))
             else:
@@ -178,7 +185,9 @@ class HBNBCommand(cmd.Cmd):
         """
         Retrieve the number of instances of a class
         """
-        count = sum(1 for obj in storage.all().values() if type(obj).__name__ == class_name)
+        count = sum(
+            1 for obj in storage.all().values() if type(obj).__name__ ==
+            class_name)
         print(count)
 
     def show(self, class_name, instance_id):
