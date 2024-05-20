@@ -4,6 +4,7 @@ Module for User class
 """
 from models.base_model import BaseModel
 
+
 class User(BaseModel):
     """
     User class inheriting from BaseModel
@@ -18,4 +19,3 @@ class User(BaseModel):
     password = ""
     first_name = ""
     last_name = ""
-
