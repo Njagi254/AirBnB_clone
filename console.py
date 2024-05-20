@@ -153,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Handle unrecognized commands, such as <class name>.all() and <class name>.count()
+        Handle unrecognized commands, such as <class name>.all(), <class name>.count(), and <class name>.show(<id>)
         """
         args = line.split('.')
         if len(args) > 1:
@@ -164,6 +164,9 @@ class HBNBCommand(cmd.Cmd):
                     self.do_all(class_name)
                 elif command == "count()":
                     self.count(class_name)
+                elif command.startswith("show(") and command.endswith(")"):
+                    instance_id = command[5:-1]
+                    self.show(class_name, instance_id)
                 else:
                     print("*** Unknown syntax: {}".format(line))
             else:
@@ -177,6 +180,16 @@ class HBNBCommand(cmd.Cmd):
         """
         count = sum(1 for obj in storage.all().values() if type(obj).__name__ == class_name)
         print(count)
+
+    def show(self, class_name, instance_id):
+        """
+        Retrieve an instance based on its ID
+        """
+        key = f"{class_name}.{instance_id}"
+        if key in storage.all():
+            print(storage.all()[key])
+        else:
+            print("** no instance found **")
 
 
 if __name__ == '__main__':
