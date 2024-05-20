@@ -104,8 +104,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """
-        Prints all string representations of all instances based or not
-        on the class name
+        Prints all string representations of all instances based or not on the class name
         """
         if arg and arg not in self.classes:
             print("** class doesn't exist **")
@@ -118,8 +117,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-        Updates an instance based on the class name and id by adding
-        or updating attribute
+        Updates an instance based on the class name and id by adding or updating attribute
         """
         args = arg.split()
         if len(args) == 0:
@@ -155,18 +153,30 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Handle unrecognized commands, such as <class name>.all()
+        Handle unrecognized commands, such as <class name>.all() and <class name>.count()
         """
         args = line.split('.')
         if len(args) > 1:
             class_name = args[0]
             command = args[1]
-            if class_name in self.classes and command == "all()":
-                self.do_all(class_name)
+            if class_name in self.classes:
+                if command == "all()":
+                    self.do_all(class_name)
+                elif command == "count()":
+                    self.count(class_name)
+                else:
+                    print("*** Unknown syntax: {}".format(line))
             else:
                 print("*** Unknown syntax: {}".format(line))
         else:
             print("*** Unknown syntax: {}".format(line))
+
+    def count(self, class_name):
+        """
+        Retrieve the number of instances of a class
+        """
+        count = sum(1 for obj in storage.all().values() if type(obj).__name__ == class_name)
+        print(count)
 
 
 if __name__ == '__main__':
