@@ -104,8 +104,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """
-        Prints all string representations of all instances based or not
-        on the class name
+        Prints all string representations of all instances
         """
         if arg and arg not in self.classes:
             print("** class doesn't exist **")
@@ -155,9 +154,8 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Handle unrecognized commands, like <class name>.all(),
-        <class name>.count(), <class name>.show(<id>), and
-        <class name>.destroy(<id>)
+        Handle unrecognized commands, such as <class name>.all(),
+        <class name>.count(), and <class name>.show(<id>)
         """
         args = line.split('.')
         if len(args) > 1:
@@ -174,6 +172,18 @@ class HBNBCommand(cmd.Cmd):
                 elif command.startswith("destroy(") and command.endswith(")"):
                     instance_id = command[8:-1].strip('"')
                     self.do_destroy(f"{class_name} {instance_id}")
+                elif command.startswith("update(") and command.endswith(")"):
+                    update_args = command[7:-1]
+                    args = update_args.split(', ')
+                    if len(args) != 3:
+                        print("** invalid number of arguments **")
+                        return
+                    instance_id = args[0].strip('"')
+                    attr_name = args[1].strip('"')
+                    attr_value = args[2].strip('"')
+                    self.do_update(
+                        f"{class_name} {instance_id} {attr_name} {attr_value}"
+                        )
                 else:
                     print("*** Unknown syntax: {}".format(line))
             else:
@@ -186,19 +196,9 @@ class HBNBCommand(cmd.Cmd):
         Retrieve the number of instances of a class
         """
         count = sum(
-            1 for obj in storage.all().values() if type(obj).__name__ ==
-            class_name)
+            1 for obj in storage.all().values() if type(obj).__name__
+            == class_name)
         print(count)
-
-    def show(self, class_name, instance_id):
-        """
-        Retrieve an instance based on its ID
-        """
-        key = f"{class_name}.{instance_id}"
-        if key in storage.all():
-            print(storage.all()[key])
-        else:
-            print("** no instance found **")
 
 
 if __name__ == '__main__':
