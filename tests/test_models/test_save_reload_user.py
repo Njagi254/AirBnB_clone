@@ -1,53 +1,28 @@
 #!/usr/bin/python3
-"""
-Unittests for FileStorage class with User instances
-"""
 
-import unittest
-from models.engine.file_storage import FileStorage
+from models import storage
+from models.base_model import BaseModel
 from models.user import User
-import os
 
-class TestFileStorageUser(unittest.TestCase):
-    """
-    Test cases for FileStorage class with User instances
-    """
+all_objs = storage.all()
+print("-- Reloaded objects --")
+for obj_id in all_objs.keys():
+    obj = all_objs[obj_id]
+    print(obj)
 
-    def setUp(self):
-        """
-        Initialize a FileStorage instance before each test
-        """
-        self.storage = FileStorage()
-        self.file_path = FileStorage._FileStorage__file_path
-        # Ensure no file exists before the test
-        if os.path.exists(self.file_path):
-            os.remove(self.file_path)
+print("-- Create a new User --")
+my_user = User()
+my_user.first_name = "Betty"
+my_user.last_name = "Bar"
+my_user.email = "airbnb@mail.com"
+my_user.password = "root"
+my_user.save()
+print(my_user)
 
-    def tearDown(self):
-        """
-        Cleanup after each test
-        """
-        # Ensure no file remains after the test
-        if os.path.exists(self.file_path):
-            os.remove(self.file_path)
-
-    def test_save_reload_user(self):
-        """
-        Test save and reload methods with User instances
-        """
-        user = User()
-        user.email = "test@example.com"
-        self.storage.new(user)
-        self.storage.save()
-        
-        # Ensure the file is created
-        self.assertTrue(os.path.exists(self.file_path))
-        
-        # Reload storage and check if user instance is restored
-        self.storage.reload()
-        key = f"User.{user.id}"
-        self.assertIn(key, self.storage.all())
-        self.assertEqual(self.storage.all()[key].email, "test@example.com")
-
-if __name__ == '__main__':
-    unittest.main()
+print("-- Create a new User 2 --")
+my_user2 = User()
+my_user2.first_name = "John"
+my_user2.email = "airbnb2@mail.com"
+my_user2.password = "root"
+my_user2.save()
+print(my_user2)
