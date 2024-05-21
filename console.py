@@ -117,8 +117,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-        Updates an instance based on the class name and id by adding or
-        updating attribute
+        Updates an instance based on the class name and id by
+        adding or updating attribute
         """
         args = arg.split()
         if len(args) == 0:
@@ -154,8 +154,8 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         """
-        Handle unrecognized commands, such as <class name>.all(),
-        <class name>.count(), and <class name>.show(<id>)
+        Handle unrecognized commands, such as
+        <class name>.all(), <class name>.count(), and <class name>.show(<id>)
         """
         args = line.split('.')
         if len(args) > 1:
@@ -197,7 +197,8 @@ class HBNBCommand(cmd.Cmd):
         """
         count = sum(
             1 for obj in storage.all().values() if type(obj).__name__
-            == class_name)
+            == class_name
+            )
         print(count)
 
 
